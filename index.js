@@ -51,15 +51,14 @@ app.post("/api/customers",(req,res)=>{
         name:req.body.name
     }
 
-    customers.push(newCustomer);git 
-    res.send(customer);
+    customers.push(newCustomer);
+    res.send(newCustomer);
 });
 
 function validateCustomer(customer){
-    const schema ={
-        title:Joi.string().min(3).max(10).required()
-    }
-    return Joi.validate(customer,schema);
+    const schema =Joi.object({name:Joi.string().min(3).required()});
+    const validation=schema.validate(customer);
+    return validation;
 }
 
 const port = process.env.PORT || 3000;
