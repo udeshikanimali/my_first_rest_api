@@ -55,6 +55,35 @@ app.post("/api/customers",(req,res)=>{
     res.send(newCustomer);
 });
 
+app.put("/api/customers/:id",(req,res)=>{
+   
+    const customer =customers.find((c)=>c.id===parseInt(req.params.id))
+    if(!customer){
+        res.status(404).send('<h2>Oppz customer is not found for id'+req.params.id+'</h2>');
+    }
+
+    const {error}=validateCustomer(req.body);
+
+    if(error){
+        res.status(400).send(error.details[0].message);
+    }
+    customer.name=req.body.name;
+    res.send(newCustomer);
+});
+
+app.delete("/api/customers/:id",(req,res)=>{
+   
+    const customer =customers.find((c)=>c.id===parseInt(req.params.id))
+    if(!customer){
+        res.status(404).send('<h2>Oppz customer is not found for id'+req.params.id+'</h2>');
+    }
+
+    const index = customers.indexOf(customer);
+    customers.splice(index,1);
+
+    res.send("Customer "+customer.name+" is removed!");
+});
+
 function validateCustomer(customer){
     const schema =Joi.object({name:Joi.string().min(3).required()});
     const validation=schema.validate(customer);
